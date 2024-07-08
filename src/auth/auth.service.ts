@@ -23,14 +23,14 @@ export class AuthService {
     }
 
     const hash = await argon.hash(dto.password);
-
+// TODO: Make role/activation token optional, jsais pas comment wesh
     const user = await this.prisma.user.create({
       data: {
         email: dto.email,
         password: hash,
         name: dto.name,
         role: 'user',
-        activation_token: null,
+        activation_token: dto.activation_token,
       },
     });
     return this.signToken(user.id);
