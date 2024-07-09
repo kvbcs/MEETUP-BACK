@@ -6,11 +6,14 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { CartService } from './cart.service';
 import { CartDto } from './dto';
 import { UpdateCartDto } from './dto/update.cart.dto';
+import { JwtGuard } from 'src/auth/guards';
 
+@UseGuards(JwtGuard)
 @Controller('cart')
 export class CartController {
   constructor(private readonly cartService: CartService) {}
@@ -20,6 +23,7 @@ export class CartController {
     return this.cartService.getAllCartProducts(id);
   }
 
+  
   @Post('/add/:id')
   addCartProduct(@Body() dto: CartDto, @Param('id') id: string) {
     return this.cartService.addCartProduct(dto, id);

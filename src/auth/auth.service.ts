@@ -4,6 +4,8 @@ import { SigninDto, SignupDto } from './dto';
 import * as argon from 'argon2';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { EmailService } from 'src/email/email.service';
+import { access } from 'fs';
 
 @Injectable()
 export class AuthService {
@@ -11,6 +13,7 @@ export class AuthService {
     private prisma: PrismaService,
     private jwt: JwtService,
     private config: ConfigService,
+    private emailService: EmailService,
   ) {}
   async signup(dto: SignupDto) {
     const exisingUser = await this.prisma.user.findUnique({
@@ -23,16 +26,28 @@ export class AuthService {
     }
 
     const hash = await argon.hash(dto.password);
-// TODO: Make role/activation token optional, jsais pas comment wesh
+
     const user = await this.prisma.user.create({
       data: {
         email: dto.email,
         password: hash,
         name: dto.name,
         role: 'user',
+        isActive: true,
       },
     });
-    return this.signToken(user.id);
+    const activationToken = await argon.hash(`${new Date()} + ${user.email}`);
+    await this.emailService.sendUserConfirmation(user, activationToken);
+    // const userToken = await this.prisma.user.update({
+    //   where: {id:id},
+    //   data: {
+    //     activation_token: activationToken
+    //   }
+    // })
+    return {
+      message: 'Sign up successful !',
+      user: user,
+    };
   }
 
   async signin(dto: SigninDto) {
@@ -49,12 +64,17 @@ export class AuthService {
     if (!isValidPassword) {
       throw new ForbiddenException('Invalid crendentials');
     }
-    return this.signToken(user.id);
+
+    return this.signToken(user.id, user.role);
   }
 
-  async signToken(userId: string): Promise<{ access_token: string }> {
+  async signToken(
+    userId: string,
+    role: string,
+  ): Promise<{ access_token: string }> {
     const payload = {
       sub: userId,
+      role: role,
     };
 
     const secret = this.config.get('JWT_SECRET');
