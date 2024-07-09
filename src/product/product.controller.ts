@@ -8,7 +8,7 @@ export class ProductController {
 
   @Get('/all')
   getAllProducts() {
-    return this.productService.getAllProducts;
+    return this.productService.getAllProducts();
   }
 
   @Post('/add')

@@ -30,7 +30,6 @@ export class AuthService {
         password: hash,
         name: dto.name,
         role: 'user',
-        activation_token: dto.activation_token,
       },
     });
     return this.signToken(user.id);

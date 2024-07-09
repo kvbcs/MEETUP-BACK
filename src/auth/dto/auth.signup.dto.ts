@@ -5,7 +5,7 @@ import {
   MaxLength,
   IsString,
   MinLength,
-  IsOptional,
+  IsEmpty,
 } from 'class-validator';
 export class SignupDto {
   @IsNotEmpty()
@@ -24,9 +24,9 @@ export class SignupDto {
   @MaxLength(50)
   name: string;
 
-  @IsOptional()
+  @IsEmpty()
   role: string;
 
-  @IsOptional()
+  @IsEmpty()
   activation_token: string;
 }
