@@ -25,7 +25,6 @@ export class UserController {
     return this.userService.updateUser(id, dto);
   }
 
-  @HttpCode(204)
   @Delete('/delete/:id')
   deleteUser(@Param('id') id: string) {
     return this.userService.deleteUser(id);

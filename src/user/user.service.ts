@@ -30,16 +30,14 @@ export class UserService {
       throw new ForbiddenException("User doesn't exist");
     }
 
-    return this.prisma.user.update({
+    const updatedUser = await this.prisma.user.update({
       where: { id: id },
       data: { ...dto },
-      select: {
-        name: true,
-        email: true,
-        id: true,
-        updatedAt: true,
-      },
     });
+    return {
+      message: 'User updated !',
+      updatedUser: updatedUser,
+    };
   }
 
   async deleteUser(id: string) {
@@ -52,10 +50,14 @@ export class UserService {
       throw new ForbiddenException("User doesn't exist");
     }
 
-    return this.prisma.user.delete({
+    const deletedUser = await this.prisma.user.delete({
       where: {
         id: id,
       },
     });
+    return {
+      message: 'User deleted !',
+      deletedUser: deletedUser,
+    };
   }
 }

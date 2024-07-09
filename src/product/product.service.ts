@@ -11,6 +11,13 @@ export class ProductService {
       orderBy: {
         name: 'asc',
       },
+      select: {
+        name: true,
+        image: true,
+        stock: true,
+        price: true,
+        category: true,
+      },
     });
   }
 
@@ -20,7 +27,10 @@ export class ProductService {
         ...dto,
       },
     });
-    return newProduct;
+    return {
+      message: 'Product created !',
+      newProduct: newProduct,
+    };
   }
 
   async updateProduct(id: string, dto: UpdateProductDto) {
@@ -32,14 +42,17 @@ export class ProductService {
       throw new ForbiddenException('Unexisting id');
     }
 
-    const updatedShoe = await this.prisma.product.update({
+    const updatedProduct = await this.prisma.product.update({
       where: { id: id },
       data: {
         ...dto,
       },
     });
 
-    return updatedShoe;
+    return {
+      message: 'Product updated !',
+      updatedProduct: updatedProduct,
+    };
   }
 
   async deleteProduct(id: string) {
@@ -55,6 +68,9 @@ export class ProductService {
       where: { id: id },
     });
 
-    return deletedProduct;
+    return {
+      message: 'Product deleted !',
+      deletedProduct: deletedProduct,
+    };
   }
 }
