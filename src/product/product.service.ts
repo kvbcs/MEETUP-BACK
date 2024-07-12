@@ -12,6 +12,7 @@ export class ProductService {
         name: 'asc',
       },
       select: {
+        id: true,
         name: true,
         image: true,
         stock: true,
