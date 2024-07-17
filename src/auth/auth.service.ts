@@ -71,19 +71,18 @@ export class AuthService {
         userId: user.id,
       },
     });
+    const token = await this.signToken(user.id);
 
-    return this.signToken(user.id, user.role, existingCart.id);
+    return {
+       token,
+      role: user.role,
+      cart: existingCart.id,
+    };
   }
 
-  async signToken(
-    userId: string,
-    role: string,
-    cartId: string,
-  ): Promise<{ access_token: string }> {
+  async signToken(userId: string): Promise<{ access_token: string }> {
     const payload = {
       sub: userId,
-      role: role,
-      cart: cartId,
     };
 
     const secret = this.config.get('JWT_SECRET');
