@@ -18,12 +18,16 @@ import { JwtGuard } from 'src/auth/guards';
 export class CartController {
   constructor(private readonly cartService: CartService) {}
 
+  @Get('/all')
+  getAllCarts() {
+    return this.cartService.getAllCarts();
+  }
+
   @Get('/all/:id')
   getAllCartProducts(@Param('id') id: string) {
     return this.cartService.getAllCartProducts(id);
   }
 
-  
   @Post('/add/:id')
   addCartProduct(@Body() dto: CartDto, @Param('id') id: string) {
     return this.cartService.addCartProduct(dto, id);

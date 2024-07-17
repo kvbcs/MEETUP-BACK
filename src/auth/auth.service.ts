@@ -36,17 +36,18 @@ export class AuthService {
         isActive: true,
       },
     });
+    const NewCart = await this.prisma.cart.create({
+      data: {
+        userId: user.id,
+      },
+    });
     const activationToken = await argon.hash(`${new Date()} + ${user.email}`);
     await this.emailService.sendUserConfirmation(user, activationToken);
-    // const userToken = await this.prisma.user.update({
-    //   where: {id:id},
-    //   data: {
-    //     activation_token: activationToken
-    //   }
-    // })
+
     return {
       message: 'Sign up successful !',
       user: user,
+      cart: NewCart,
     };
   }
 
@@ -65,16 +66,24 @@ export class AuthService {
       throw new ForbiddenException('Invalid crendentials');
     }
 
-    return this.signToken(user.id, user.role);
+    const existingCart = await this.prisma.cart.findFirst({
+      where: {
+        userId: user.id,
+      },
+    });
+
+    return this.signToken(user.id, user.role, existingCart.id);
   }
 
   async signToken(
     userId: string,
     role: string,
+    cartId: string,
   ): Promise<{ access_token: string }> {
     const payload = {
       sub: userId,
       role: role,
+      cart: cartId,
     };
 
     const secret = this.config.get('JWT_SECRET');

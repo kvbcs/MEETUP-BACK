@@ -8,14 +8,26 @@ import { UUID } from 'crypto';
 export class CartService {
   constructor(private prisma: PrismaService) {}
 
-  async getAllCartProducts(id: string) {
+  async getAllCarts() {
+    const fetchCarts = await this.prisma.cart_Has_Product.findMany({
+      select: {
+        cart: true,
+        product: true,
+        quantity: true,
+        productId: true,
+      },
+    });
+    return fetchCarts;
+  }
+  async getAllCartProducts(cartId: string) {
     return this.prisma.cart_Has_Product.findMany({
-      where: { cartId: id },
+      where: { cartId: cartId },
       orderBy: {
         productId: 'desc',
       },
       select: {
         productId: true,
+        product: true,
         quantity: true,
       },
     });

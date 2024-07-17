@@ -38,7 +38,7 @@ model Category {
 
 model Cart {
   id        String    @id @default(uuid())
-  userId    String
+  userId    String    @unique
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 
@@ -57,11 +57,11 @@ model User {
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 
-  carts             Cart[]
+  carts            Cart[]
 }
 
 model Cart_Has_Product {
-  cartId    String
+  cartId    String  @unique
   productId String
   quantity  Int
 

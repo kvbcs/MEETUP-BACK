@@ -34,7 +34,7 @@ export class ProductController {
   }
 
   @UseGuards(JwtGuard)
-  @Delete('/deleted/:id')
+  @Delete('/delete/:id')
   deleteProduct(@Param('id') id: string) {
     return this.productService.deleteProduct(id);
   }
