@@ -33,7 +33,26 @@ export class CartService {
     });
   }
 
-  async addCartProduct(dto: CartDto, id: string) {
+  async addCartProduct(
+    dto: CartDto,
+    id: string,
+  ) {
+    // const existingCartProduct = await this.prisma.cart_Has_Product.findFirst({
+    //   where: {
+    //     AND: {
+    //       productId: id,
+    //       cartId: id,
+    //     },
+    //   },
+    // });
+
+    // if (existingCartProduct) {
+    //   const updatedProduct = await this.updateCartProduct(
+    //     cartId,
+    //     productId,
+    //     updateDto,
+    //   );
+    // }
     const newCartProduct = await this.prisma.cart_Has_Product.create({
       data: {
         cartId: id,
@@ -41,6 +60,7 @@ export class CartService {
         quantity: dto.quantity,
       },
     });
+
     return {
       message: 'Product added to cart !',
       newCartProduct: newCartProduct,

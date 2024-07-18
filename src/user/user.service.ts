@@ -49,7 +49,18 @@ export class UserService {
     if (!existingUser || !existingUser.id) {
       throw new ForbiddenException("User doesn't exist");
     }
-
+    const deletedCartProducts = await this.prisma.cart_Has_Product.deleteMany({
+      where: {
+        cart: {
+          userId: id,
+        },
+      },
+    });
+    const deletedCart = await this.prisma.cart.deleteMany({
+      where: {
+        userId: id,
+      },
+    });
     const deletedUser = await this.prisma.user.delete({
       where: {
         id: id,
@@ -58,6 +69,8 @@ export class UserService {
     return {
       message: 'User deleted !',
       deletedUser: deletedUser,
+      deltedCartProducts: deletedCartProducts,
+      deletedCart: deletedCart,
     };
   }
 }

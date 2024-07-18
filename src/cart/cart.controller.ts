@@ -29,8 +29,19 @@ export class CartController {
   }
 
   @Post('/add/:id')
-  addCartProduct(@Body() dto: CartDto, @Param('id') id: string) {
-    return this.cartService.addCartProduct(dto, id);
+  addCartProduct(
+    @Body() dto: CartDto,
+    @Param('id') id: string,
+    // @Param('cartId') cartId: string,
+    // @Param('productId') productId: string,
+  ) {
+    return this.cartService.addCartProduct(
+      dto,
+      id,
+      // cartId,
+      // productId,
+      // updateDto,
+    );
   }
 
   @Patch('/update/:cartId/:productId')

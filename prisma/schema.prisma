@@ -38,7 +38,7 @@ model Category {
 
 model Cart {
   id        String    @id @default(uuid())
-  userId    String    @unique
+  userId    String    
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 
@@ -53,7 +53,7 @@ model User {
   password          String
   role              String?  @default("user")
   isActive          Boolean  @default(false)
-  activation_token  String?    @default("null")
+  activation_token  String?  @default("null")
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 
@@ -61,7 +61,7 @@ model User {
 }
 
 model Cart_Has_Product {
-  cartId    String  @unique
+  cartId    String  
   productId String
   quantity  Int
 
