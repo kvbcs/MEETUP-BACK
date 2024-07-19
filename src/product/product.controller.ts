@@ -21,6 +21,11 @@ export class ProductController {
     return this.productService.getAllProducts();
   }
 
+  @Get('/all/search')
+  searchProducts(@Body('query') query: string) {
+    return this.productService.searchProducts(query);
+  }
+
   @UseGuards(JwtGuard)
   @Post('/add')
   addProduct(@Body() dto: InsertProductDto) {

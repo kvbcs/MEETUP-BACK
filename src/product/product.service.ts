@@ -22,6 +22,28 @@ export class ProductService {
     });
   }
 
+  async searchProducts(query: string) {
+    const results = await this.prisma.product.findMany({
+      where: {
+        name: {
+          contains: query,
+        },
+      },
+      select: {
+        id: true,
+        name: true,
+        image: true,
+        stock: true,
+        price: true,
+        category: true,
+      },
+    });
+    return {
+      totalResults: results.length,
+      results: results,
+    };
+  }
+
   async addProduct(dto: InsertProductDto) {
     const newProduct = await this.prisma.product.create({
       data: {
