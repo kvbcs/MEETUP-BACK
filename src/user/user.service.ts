@@ -19,6 +19,19 @@ export class UserService {
     });
   }
 
+   async getOneUser(id:string) {
+    return this.prisma.user.findUnique({
+      where: {
+        id: id,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+      },
+    });
+  }
+
   async updateUser(id: string, dto: UpdateUserDto) {
     const existingUser = await this.prisma.user.findUnique({
       where: {

@@ -23,6 +23,11 @@ export class UserController {
     return this.userService.getAllUsers();
   }
 
+  @Get('/profile/:id')
+  getOneUser(@Param('id') id: string) {
+    return this.userService.getOneUser(id);
+  }
+
   @Patch('/update/:id')
   editUser(@Body() dto: UpdateUserDto, @Param('id') id: string) {
     return this.userService.updateUser(id, dto);
