@@ -8,4 +8,4 @@ import { PrismaService } from 'src/prisma/prisma.service';
   controllers: [EventController],
   providers: [EventService, PrismaService, InsertEventDto, UpdateEventDto],
 })
-export class EventServiceModule {}
+export class EventModule {}

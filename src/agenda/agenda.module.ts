@@ -8,4 +8,4 @@ import { InsertAgendaDto, UpdateAgendaDto } from './dto';
   controllers: [AgendaController],
   providers: [AgendaService, PrismaService, InsertAgendaDto, UpdateAgendaDto],
 })
-export class CartModule {}
+export class AgendaModule {}

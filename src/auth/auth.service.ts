@@ -5,7 +5,6 @@ import * as argon from 'argon2';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { EmailService } from 'src/email/email.service';
-import { access } from 'fs';
 
 @Injectable()
 export class AuthService {
@@ -29,14 +28,16 @@ export class AuthService {
 
     const user = await this.prisma.user.create({
       data: {
+        firstName: dto.firstName,
+        lastName: dto.lastName,
         email: dto.email,
         password: hash,
-        name: dto.name,
-        role: 'user',
-        isActive: true,
+        roleId: 'c8b46a3d-7589-4be1-8f72-3562b8baabd0',
+        isActive: false,
+        activationToken: null,
       },
     });
-    const NewCart = await this.prisma.cart.create({
+    const NewAgenda = await this.prisma.agenda.create({
       data: {
         userId: user.id,
       },
@@ -47,36 +48,39 @@ export class AuthService {
     return {
       message: 'Sign up successful !',
       user: user,
-      cart: NewCart,
+      agenda: NewAgenda,
     };
   }
 
   async signin(dto: SigninDto) {
-    const user = await this.prisma.user.findUnique({
+    const existingUser = await this.prisma.user.findUnique({
       where: {
         email: dto.email,
       },
     });
-    if (!user) {
+    if (!existingUser || !existingUser.email) {
       throw new ForbiddenException('Invalid crendentials');
     }
 
-    const isValidPassword = await argon.verify(user.password, dto.password);
+    const isValidPassword = await argon.verify(
+      existingUser.password,
+      dto.password,
+    );
     if (!isValidPassword) {
       throw new ForbiddenException('Invalid crendentials');
     }
 
-    const existingCart = await this.prisma.cart.findFirst({
+    const existingAgenda = await this.prisma.agenda.findFirst({
       where: {
-        userId: user.id,
+        userId: existingUser.id,
       },
     });
-    const token = await this.signToken(user.id);
+    const token = await this.signToken(existingUser.id);
 
     return {
-       token,
-      role: user.role,
-      cart: existingCart.id,
+      token,
+      role: existingUser.roleId,
+      agenda: existingAgenda.id,
     };
   }
 

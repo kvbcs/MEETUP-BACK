@@ -8,13 +8,21 @@ export class UserService {
   constructor(private readonly databaseService: DatabaseService) {}
 
   async getAllUsers() {
-    const query = 'SELECT id, name, email FROM user ORDER BY createdAt';
-    return this.databaseService.query(query);
+    const query =
+      'SELECT id, firstName, lastName, email, password, agenda, roleId, isActive, createdAt, updatedAt FROM user ORDER BY createdAt';
+    const fetchUsers = await this.databaseService.query(query);
+    return {
+      users: fetchUsers,
+    };
   }
 
   async getOneUser(id: string) {
-    const query = 'SELECT id, name, email FROM user WHERE id = ?';
-    return this.databaseService.query(query, [id]);
+    const query = 'SELECT * FROM user WHERE id = ?';
+    const user = await this.databaseService.query(query, [id]);
+    if (!user) {
+      throw new ForbiddenException("User doesn't exist");
+    }
+    return user;
   }
 
   async updateUser(id: string, dto: UpdateUserDto) {
@@ -32,9 +40,13 @@ export class UserService {
     const fieldsToUpdate = [];
     const values = [];
 
-    if (dto.name) {
-      fieldsToUpdate.push('name = ?');
-      values.push(dto.name);
+    if (dto.firstName) {
+      fieldsToUpdate.push('firstName = ?');
+      values.push(dto.firstName);
+    }
+    if (dto.lastName) {
+      fieldsToUpdate.push('lastName = ?');
+      values.push(dto.lastName);
     }
     if (dto.email) {
       fieldsToUpdate.push('email = ?');
@@ -64,9 +76,9 @@ export class UserService {
 
   async deleteUser(id: string) {
     const existingUserQuery = 'SELECT id FROM user WHERE id = ?';
-    const deleteCartProductsQuery =
-      'DELETE FROM cart_has_product WHERE cart_id IN (SELECT id FROM cart WHERE user_id = ?)';
-    const deleteCartQuery = 'DELETE FROM cart WHERE user_id = ?';
+    const deleteAgendaEventsQuery =
+      'DELETE FROM agenda_has_event WHERE agendaId IN (SELECT id FROM agenda WHERE userId = ?)';
+    const deleteAgendaQuery = 'DELETE FROM agenda WHERE userId = ?';
     const deleteUserQuery = 'DELETE FROM user WHERE id = ?';
 
     // Vérifier si l'utilisateur existe
@@ -78,13 +90,15 @@ export class UserService {
     }
 
     // Supprimer les produits dans le panier
-    const deletedCartProducts = await this.databaseService.query(
-      deleteCartProductsQuery,
+    const deletedAgendaEvents = await this.databaseService.query(
+      deleteAgendaEventsQuery,
       [id],
     );
 
     // Supprimer le panier
-    const deletedCart = await this.databaseService.query(deleteCartQuery, [id]);
+    const deletedAgenda = await this.databaseService.query(deleteAgendaQuery, [
+      id,
+    ]);
 
     // Supprimer l'utilisateur
     const deletedUser = await this.databaseService.query(deleteUserQuery, [id]);
@@ -92,8 +106,8 @@ export class UserService {
     return {
       message: 'User deleted!',
       deletedUser: deletedUser,
-      deletedCartProducts: deletedCartProducts,
-      deletedCart: deletedCart,
+      deletedAgendaEvents: deletedAgendaEvents,
+      deletedAgenda: deletedAgenda,
     };
   }
 }

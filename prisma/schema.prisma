@@ -19,16 +19,15 @@ model User {
   lastName        String  @db.VarChar(255)
   email           String  @unique() @db.VarChar(255)
   password        String  @db.VarChar(150)
-  agendaId        String  @db.VarChar(36)
-  roleId          String  @default(uuid()) @db.VarChar(36)
+  roleId          String? @db.VarChar(36)
   isActive        Boolean  @default(false)
-  activationToken String
+  activationToken String?
   gdpr            DateTime  @default(now())
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
   agenda          Agenda[]
-  role            Role @relation(fields:[roleId], references: [id])
+  role            Role? @relation(fields: [roleId], references: [id])
 }
 
 model Role {
@@ -37,7 +36,7 @@ model Role {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  users     User[]
+  users       User []
 }
 
 model Event {
