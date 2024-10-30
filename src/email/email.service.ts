@@ -24,15 +24,15 @@ export class EmailService {
 
   async sendUserConfirmation(user: User, token: string) {
     const url = `${this.config.get('SERVER_URL')}/activate?token=${token}`;
-    const emailHtml = `<p>Hey ${user.name},</p>
-        <p>Your requested an account creation on our Ecommerce</p>
+    const emailHtml = `<p>Hey ${user.firstName},</p>
+        <p>Your requested an account creation on our Event website</p>
             <a href='${url}'>Click here to activate your account</a>
         <p>If you did not request this email you can safely ignore it.</p>`;
 
     await this.transporter.sendMail({
       from: this.config.get('SMTP_EMAIL'),
       to: user.email,
-      subject: 'Welcome user! Confirm your Email',
+      subject: `Welcome user ! Confirm your Email`,
       html: emailHtml,
     });
   }
@@ -50,7 +50,7 @@ export class EmailService {
       where: { id: user.id },
       data: {
         isActive: true,
-        activation_token: null,
+        activationToken: null,
       },
     });
     return {

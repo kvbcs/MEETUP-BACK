@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CategoryDto } from './dto';
+import { InsertCategoryDto, UpdateCategoryDto } from './dto';
 
 @Injectable()
 export class CategoryService {
@@ -11,13 +11,22 @@ export class CategoryService {
       orderBy: {
         name: 'asc',
       },
-      select: { name: true, id: true },
+      select: {
+        id: true,
+        name: true,
+        image: true,
+        createdAt: true,
+        updatedAt: true,
+      },
     });
 
-    return allCategories;
+    return {
+      totalResults: allCategories.length,
+      categories: allCategories,
+    };
   }
 
-  async addCategory(dto: CategoryDto) {
+  async addCategory(dto: InsertCategoryDto) {
     const existingCategory = await this.prisma.category.findUnique({
       where: { name: dto.name },
     });
@@ -34,7 +43,7 @@ export class CategoryService {
     };
   }
 
-  async updateCategory(id: string, dto: CategoryDto) {
+  async updateCategory(id: string, dto: UpdateCategoryDto) {
     const existingCategory = await this.prisma.category.findUnique({
       where: { id: id },
     });
@@ -65,7 +74,7 @@ export class CategoryService {
 
     const deletedCategory = await this.prisma.category.delete({
       where: { id: id },
-      select: { name: true, id: true },
+      select: { id: true, name: true, image: true },
     });
 
     return {

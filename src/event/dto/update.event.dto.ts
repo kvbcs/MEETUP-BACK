@@ -1,34 +1,46 @@
 import {
+  IsDate,
   IsNumber,
   IsOptional,
   IsString,
   IsUrl,
+  IsUUID,
   Max,
   MaxLength,
   Min,
   MinLength,
 } from 'class-validator';
 
-export class UpdateProductDto {
+export class UpdateEventDto {
   @IsOptional()
   @IsString()
   @MinLength(3)
   @MaxLength(99)
-  name: string;
+  title: string;
 
   @IsOptional()
   @IsUrl()
   image: string;
 
   @IsOptional()
-  @IsNumber()
-  @Min(1)
-  @Max(999999)
-  price: number;
+  @IsString()
+  @MinLength(5)
+  @MaxLength(255)
+  description: string;
+
+  @IsOptional()
+  @IsUUID()
+  categoryId: string;
 
   @IsOptional()
   @IsNumber()
   @Min(1)
-  @Max(999)
-  stock: number;
+  @Max(999999)
+  price: number;
+  maxParticipants: number;
+
+  @IsOptional()
+  @IsDate()
+  startDate: string;
+  endDate: string;
 }

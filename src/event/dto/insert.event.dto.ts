@@ -1,4 +1,5 @@
 import {
+  IsDate,
   IsNotEmpty,
   IsNumber,
   IsString,
@@ -10,30 +11,36 @@ import {
   MinLength,
 } from 'class-validator';
 
-export class InsertProductDto {
+export class InsertEventDto {
   @IsNotEmpty()
   @IsString()
   @MinLength(3)
   @MaxLength(99)
-  name: string;
+  title: string;
 
   @IsNotEmpty()
   @IsUrl()
   image: string;
 
   @IsNotEmpty()
+  @IsString()
+  @MinLength(5)
+  @MaxLength(255)
+  description: string;
+
+  @IsNotEmpty()
   @IsUUID()
-    categoryId: string;
-    
+  categoryId: string;
+
   @IsNotEmpty()
   @IsNumber()
   @Min(1)
   @Max(999999)
   price: number;
+  maxParticipants: number;
 
   @IsNotEmpty()
-  @IsNumber()
-  @Min(1)
-  @Max(999)
-  stock: number;
+  @IsDate()
+  startDate: string;
+  endDate: string;
 }

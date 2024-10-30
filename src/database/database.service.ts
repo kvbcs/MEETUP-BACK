@@ -14,10 +14,10 @@ export class DatabaseService {
   async init() {
     this.connection = await mysql.createConnection({
       host: this.config.get<string>('DB_HOST') || 'localhost',
-      user: this.config.get<string>('DB_USER'),
+      user: this.config.get<string>('DB_USER') || 'root',
       port: this.config.get<number>('DB_PORT') || 3306,
-      password: this.config.get<string>('DB_PASSWORD'),
-      database: this.config.get<string>('DB_NAME') || 'test_db',
+      password: this.config.get<string>('DB_PASSWORD') || '',
+      database: this.config.get<string>('DB_NAME') || 'brief8',
     });
     console.log('Connected to MySQL database');
   }

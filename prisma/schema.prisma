@@ -13,60 +13,78 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Product {
-  id          String @id @default(uuid())
-  name        String
-  image       String
-  categoryId  String
-  price       Float
-  stock       Int
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+model User {
+  id          String   @id @default(uuid()) @db.VarChar(36)
+  firstName       String  @db.VarChar(255)
+  lastName        String  @db.VarChar(255)
+  email           String  @unique() @db.VarChar(255)
+  password        String  @db.VarChar(150)
+  agendaId        String  @db.VarChar(36)
+  roleId          String  @default(uuid()) @db.VarChar(36)
+  isActive        Boolean  @default(false)
+  activationToken String
+  gdpr            DateTime  @default(now())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
-  category    Category @relation(fields: [categoryId], references: [id])
-  cartItems   Cart_Has_Product[]
+  agenda          Agenda[]
+  role            Role @relation(fields:[roleId], references: [id])
 }
 
-model Category {
-  id        String   @id @default(uuid())
-  name      String   @unique
+model Role {
+  id        String   @id @default(uuid()) @db.VarChar(36)
+  name      String   @unique @db.VarChar(20)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  products  Product[]
+  users     User[]
 }
 
-model Cart {
-  id        String    @id @default(uuid())
-  userId    String    
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+model Event {
+  id        String   @id @default(uuid()) @db.VarChar(36)
+  title          String   @db.VarChar(255)
+  image          String 
+  description    String    @db.VarChar(255)
+  categoryId     String  @db.VarChar(36)
+  startDate      DateTime
+  endDate        DateTime
+  maxParticipants Int 
+  price          Float
+  isAvailable    Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
-  user      User      @relation(fields: [userId], references: [id])
-  cartItems Cart_Has_Product[]
+  category       Category @relation(fields: [categoryId], references: [id])
+  agendas        Agenda_Has_Event[]
 }
 
-model User {
-  id                String   @id @default(uuid())
-  name              String
-  email             String   @unique
-  password          String
-  role              String?  @default("user")
-  isActive          Boolean  @default(false)
-  activation_token  String?  @default("null")
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+model Category {
+  id           String   @id @default(uuid()) @db.VarChar(36)
+  name         String   @unique @db.VarChar(36)
+  image        String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
-  carts            Cart[]
+  events       Event[]
 }
 
-model Cart_Has_Product {
-  cartId    String  
-  productId String
-  quantity  Int
+model Agenda {
+  id    String   @id @default(uuid()) @db.VarChar(36)
+  userId  String @default(uuid()) @db.VarChar(36)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  cart      Cart    @relation(fields: [cartId], references: [id])
-  product   Product @relation(fields: [productId], references: [id])
+  users       User @relation(fields: [userId], references: [id])
+  events      Agenda_Has_Event[]
+}
 
-  @@id([cartId, productId])
+model Agenda_Has_Event {
+  agendaId   String   @db.VarChar(36)
+  eventId    String   @db.VarChar(36)
+  quantity    Int
+
+  agenda     Agenda  @relation(fields: [agendaId], references: [id])
+  event      Event   @relation(fields: [eventId], references: [id])
+
+  @@id([agendaId, eventId])
 }

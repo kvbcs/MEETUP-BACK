@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsNumber } from 'class-validator';
 
-export class UpdateCartDto {
+export class UpdateAgendaDto {
   @IsNumber()
   @IsNotEmpty()
   quantity: number;

@@ -9,7 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { CategoryService } from './category.service';
-import { CategoryDto } from './dto';
+import { InsertCategoryDto, UpdateCategoryDto } from './dto';
 import { JwtGuard } from 'src/auth/guards';
 
 @Controller('category')
@@ -23,13 +23,13 @@ export class CategoryController {
 
   @UseGuards(JwtGuard)
   @Post('/add')
-  addCategory(@Body() dto: CategoryDto) {
+  addCategory(@Body() dto: InsertCategoryDto) {
     return this.categoryService.addCategory(dto);
   }
 
   @UseGuards(JwtGuard)
   @Patch('/update/:id')
-  updateCategory(@Body() dto: CategoryDto, @Param('id') id: string) {
+  updateCategory(@Body() dto: UpdateCategoryDto, @Param('id') id: string) {
     return this.categoryService.updateCategory(id, dto);
   }
 
