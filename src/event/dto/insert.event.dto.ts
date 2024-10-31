@@ -1,5 +1,6 @@
 import {
   IsDate,
+  IsDateString,
   IsNotEmpty,
   IsNumber,
   IsString,
@@ -35,12 +36,20 @@ export class InsertEventDto {
   @IsNotEmpty()
   @IsNumber()
   @Min(1)
-  @Max(999999)
+  @Max(9999)
   price: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  @Min(1)
+  @Max(999999)
   maxParticipants: number;
 
   @IsNotEmpty()
-  @IsDate()
+  @IsDateString()
   startDate: string;
+
+  @IsNotEmpty()
+  @IsDateString()
   endDate: string;
 }

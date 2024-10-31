@@ -9,7 +9,7 @@ export class UserService {
 
   async getAllUsers() {
     const query =
-      'SELECT id, firstName, lastName, email, password, agenda, roleId, isActive, createdAt, updatedAt FROM user ORDER BY createdAt';
+      'SELECT id, firstName, lastName, email, password, roleId, isActive, createdAt, updatedAt FROM user ORDER BY createdAt';
     const fetchUsers = await this.databaseService.query(query);
     return {
       users: fetchUsers,

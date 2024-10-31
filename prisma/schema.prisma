@@ -20,13 +20,14 @@ model User {
   email           String  @unique() @db.VarChar(255)
   password        String  @db.VarChar(150)
   roleId          String? @db.VarChar(36)
+  agendaId          String? @db.VarChar(36)
   isActive        Boolean  @default(false)
   activationToken String?
   gdpr            DateTime  @default(now())
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
-  agenda          Agenda[]
+  agenda          Agenda? @relation(fields: [agendaId], references: [id])
   role            Role? @relation(fields: [roleId], references: [id])
 }
 
@@ -73,8 +74,8 @@ model Agenda {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  users       User @relation(fields: [userId], references: [id])
-  events      Agenda_Has_Event[]
+  users         User[]
+  agendaEvents  Agenda_Has_Event[]
 }
 
 model Agenda_Has_Event {

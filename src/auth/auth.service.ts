@@ -25,6 +25,7 @@ export class AuthService {
     }
 
     const hash = await argon.hash(dto.password);
+    const activationToken = await argon.hash(`${new Date()} + ${dto.email}`);
 
     const user = await this.prisma.user.create({
       data: {
@@ -32,9 +33,9 @@ export class AuthService {
         lastName: dto.lastName,
         email: dto.email,
         password: hash,
-        roleId: 'c8b46a3d-7589-4be1-8f72-3562b8baabd0',
+        roleId: 'c4508381-545b-42a8-90b2-8ce7d6fc4724',
         isActive: false,
-        activationToken: null,
+        activationToken: activationToken,
       },
     });
     const NewAgenda = await this.prisma.agenda.create({
@@ -42,13 +43,19 @@ export class AuthService {
         userId: user.id,
       },
     });
-    const activationToken = await argon.hash(`${new Date()} + ${user.email}`);
+
+    await this.prisma.user.update({
+      where: { id: user.id },
+      data: { agendaId: NewAgenda.id }, // Mettre à jour agendaId
+    });
+
+    // Envoyer l'email de confirmation
     await this.emailService.sendUserConfirmation(user, activationToken);
 
     return {
-      message: 'Sign up successful !',
-      user: user,
-      agenda: NewAgenda,
+      message: 'Sign up successful!',
+      user: { ...user, agendaId: NewAgenda.id }, // Inclure agendaId dans la réponse
+      agenda: NewAgenda, // Retourne l'agenda nouvellement créé
     };
   }
 
