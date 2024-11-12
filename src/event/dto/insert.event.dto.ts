@@ -1,11 +1,10 @@
 import {
-  IsDate,
-  IsDateString,
   IsNotEmpty,
   IsNumber,
   IsString,
   IsUrl,
   IsUUID,
+  Matches,
   Max,
   MaxLength,
   Min,
@@ -46,10 +45,16 @@ export class InsertEventDto {
   maxParticipants: number;
 
   @IsNotEmpty()
-  @IsDateString()
+  @IsString()
+  @Matches(/^([0-2][0-9]|3[0-1])\/(0[1-9]|1[0-2])\/\d{4}$/, {
+    message: 'Start Date must in a valid format DD/MM/YYYY',
+  })
   startDate: string;
 
   @IsNotEmpty()
-  @IsDateString()
+  @IsString()
+  @Matches(/^([0-2][0-9]|3[0-1])\/(0[1-9]|1[0-2])\/\d{4}$/, {
+    message: 'End Date must in a valid format DD/MM/YYYY',
+  })
   endDate: string;
 }

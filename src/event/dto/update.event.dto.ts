@@ -34,13 +34,21 @@ export class UpdateEventDto {
 
   @IsOptional()
   @IsNumber()
-  @Min(1)
+  @Min(0)
   @Max(999999)
   price: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(1)
+  @Max(999999)
   maxParticipants: number;
 
   @IsOptional()
   @IsDate()
   startDate: string;
+
+  @IsOptional()
+  @IsDate()
   endDate: string;
 }

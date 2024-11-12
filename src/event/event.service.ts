@@ -9,7 +9,7 @@ export class EventService {
   async getAllEvents() {
     const allEvents = await this.prisma.event.findMany({
       orderBy: {
-        title: 'asc',
+        createdAt: 'desc',
       },
       select: {
         id: true,
@@ -23,6 +23,8 @@ export class EventService {
         startDate: true,
         endDate: true,
         isAvailable: true,
+        createdAt: true,
+        updatedAt: true,
       },
     });
 
