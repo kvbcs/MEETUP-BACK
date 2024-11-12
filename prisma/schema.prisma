@@ -46,8 +46,8 @@ model Event {
   image          String 
   description    String    @db.VarChar(255)
   categoryId     String  @db.VarChar(36)
-  startDate      String @db.VarChar(10)
-  endDate        String @db.VarChar(10)
+  startDate      DateTime
+  endDate        DateTime
   maxParticipants Int 
   price          Float
   isAvailable    Boolean  @default(true)
