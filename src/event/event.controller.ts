@@ -22,6 +22,11 @@ export class EventController {
     return this.eventService.getAllEvents();
   }
 
+  @Get('/:id')
+  getOneEvent(@Param('id') id: string) {
+    return this.eventService.getOneEvent(id);
+  }
+
   @Get('/all/:query')
   searchEvents(@Param('query') query: string) {
     return this.eventService.searchEvents(query);

@@ -1,4 +1,8 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InsertEventDto, UpdateEventDto } from './dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 
@@ -32,6 +36,36 @@ export class EventService {
       totalResults: allEvents.length,
       events: allEvents,
     };
+  }
+
+  async getOneEvent(id: string) {
+    // Recherche de l'événement et sélection des champs spécifiques en une seule requête
+    const fetchEvent = await this.prisma.event.findUnique({
+      where: { id: id },
+      select: {
+        id: true,
+        title: true,
+        categoryId: true,
+        category: true,
+        image: true,
+        description: true,
+        maxParticipants: true,
+        price: true,
+        startDate: true,
+        endDate: true,
+        isAvailable: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    // Si l'événement n'existe pas, lève une exception
+    if (!fetchEvent || !fetchEvent.id) {
+      throw new NotFoundException('Event not found!');
+    }
+
+    // Retourne l'événement trouvé
+    return fetchEvent;
   }
 
   async searchEvents(query: string) {
@@ -112,7 +146,7 @@ export class EventService {
     });
 
     if (!existingEvent || !existingEvent.id) {
-      throw new ForbiddenException('Unexisting id !');
+      throw new NotFoundException('Unexisting id !');
     }
 
     const updatedEvent = await this.prisma.event.update({
@@ -134,7 +168,7 @@ export class EventService {
     });
 
     if (!existingEvent || !existingEvent.id) {
-      throw new ForbiddenException('Unexisting id !');
+      throw new NotFoundException('Unexisting id !');
     }
 
     const deletedEvent = await this.prisma.event.delete({
