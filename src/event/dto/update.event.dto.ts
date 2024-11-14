@@ -1,5 +1,6 @@
 import {
   IsDate,
+  IsDateString,
   IsNumber,
   IsOptional,
   IsString,
@@ -45,10 +46,10 @@ export class UpdateEventDto {
   maxParticipants: number;
 
   @IsOptional()
-  @IsDate()
+  @IsDateString()
   startDate: string;
 
   @IsOptional()
-  @IsDate()
+  @IsDateString()
   endDate: string;
 }

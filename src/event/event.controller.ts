@@ -27,6 +27,11 @@ export class EventController {
     return this.eventService.searchEvents(query);
   }
 
+  @Get('/all/category/:query')
+  searchEventsByCategory(@Param('query') query: string) {
+    return this.eventService.searchEventsByCategory(query);
+  }
+
   @UseGuards(JwtGuard, AdminGuard)
   @Post('/add')
   addEvent(@Body() dto: InsertEventDto) {

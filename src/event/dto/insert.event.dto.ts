@@ -1,10 +1,11 @@
 import {
+  IsDate,
+  IsDateString,
   IsNotEmpty,
   IsNumber,
   IsString,
   IsUrl,
   IsUUID,
-  Matches,
   Max,
   MaxLength,
   Min,
@@ -34,7 +35,7 @@ export class InsertEventDto {
 
   @IsNotEmpty()
   @IsNumber()
-  @Min(1)
+  @Min(0)
   @Max(9999)
   price: number;
 
@@ -46,15 +47,11 @@ export class InsertEventDto {
 
   @IsNotEmpty()
   @IsString()
-  @Matches(/^([0-2][0-9]|3[0-1])\/(0[1-9]|1[0-2])\/\d{4}$/, {
-    message: 'Start Date must in a valid format DD/MM/YYYY',
-  })
+  @IsDateString()
   startDate: string;
 
   @IsNotEmpty()
   @IsString()
-  @Matches(/^([0-2][0-9]|3[0-1])\/(0[1-9]|1[0-2])\/\d{4}$/, {
-    message: 'End Date must in a valid format DD/MM/YYYY',
-  })
+  @IsDateString()
   endDate: string;
 }

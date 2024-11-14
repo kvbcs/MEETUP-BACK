@@ -61,6 +61,39 @@ export class EventService {
     };
   }
 
+  async searchEventsByCategory(query: string) {
+    const results = await this.prisma.event.findMany({
+      where: {
+        category: {
+          name: {
+            contains: query,
+          },
+        },
+      },
+      select: {
+        id: true,
+        title: true,
+        categoryId: true,
+        category: {
+          select: {
+            name: true,
+          },
+        },
+        image: true,
+        description: true,
+        maxParticipants: true,
+        price: true,
+        startDate: true,
+        endDate: true,
+        isAvailable: true,
+      },
+    });
+    return {
+      totalResults: results.length,
+      results: results,
+    };
+  }
+
   async addEvent(dto: InsertEventDto) {
     const newEvent = await this.prisma.event.create({
       data: {

@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   Patch,
   Post,
@@ -47,5 +49,11 @@ export class AgendaController {
     @Param('eventId') eventId: string,
   ) {
     return this.agendaService.deleteAgendaEvent(agendaId, eventId);
+  }
+
+  @Delete('/delete/:agendaId')
+  @HttpCode(HttpStatus.OK)
+  deleteAllAgendaEvents(@Param('agendaId') agendaId: string) {
+    return this.agendaService.deleteAllAgendaEvents(agendaId);
   }
 }

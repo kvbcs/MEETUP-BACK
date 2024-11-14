@@ -41,6 +41,35 @@ export class AgendaService {
   }
 
   async addAgendaEvent(dto: InsertAgendaDto, id: string) {
+    // Vérifier s'il existe déjà une entrée avec la même combinaison de agendaId et eventId
+    const existingAgendaEvent = await this.prisma.agenda_Has_Event.findUnique({
+      where: {
+        agendaId_eventId: {
+          agendaId: id,
+          eventId: dto.eventId,
+        },
+      },
+    });
+
+    // Si l'entrée existe déjà, mettre à jour la quantité
+    if (existingAgendaEvent) {
+      const updatedAgendaEvent = await this.prisma.agenda_Has_Event.update({
+        where: {
+          agendaId_eventId: {
+            agendaId: id,
+            eventId: dto.eventId,
+          },
+        },
+        data: {
+          quantity: existingAgendaEvent.quantity + dto.quantity,
+        },
+      });
+
+      return {
+        message: 'Event quantity updated in agenda!',
+        agendaEvent: updatedAgendaEvent,
+      };
+    }
     const newAgendaEvent = await this.prisma.agenda_Has_Event.create({
       data: {
         agendaId: id,
@@ -121,6 +150,31 @@ export class AgendaService {
     return {
       message: 'Agenda event deleted !',
       deletedAgendaEvent: deletedAgendaEvent,
+    };
+  }
+
+  async deleteAllAgendaEvents(agendaId: string) {
+    // Vérifier si l'agenda existe
+    const existingAgenda = await this.prisma.agenda_Has_Event.findFirst({
+      where: {
+        agendaId: agendaId,
+      },
+    });
+
+    if (!existingAgenda || !existingAgenda.agendaId) {
+      throw new ForbiddenException('Unexisting agenda');
+    }
+
+    // Supprimer tous les événements associés à cet agenda
+    const deletedAgendaEvents = await this.prisma.agenda_Has_Event.deleteMany({
+      where: {
+        agendaId: agendaId,
+      },
+    });
+
+    return {
+      message: 'All events from the agenda have been deleted!',
+      results: deletedAgendaEvents,
     };
   }
 }
