@@ -60,7 +60,7 @@ export class EventService {
     });
 
     // Si l'événement n'existe pas, lève une exception
-    if (!fetchEvent || !fetchEvent.id) {
+    if (!fetchEvent) {
       throw new NotFoundException('Event not found!');
     }
 

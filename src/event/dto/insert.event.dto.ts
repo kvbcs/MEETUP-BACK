@@ -26,7 +26,7 @@ export class InsertEventDto {
   @IsNotEmpty()
   @IsString()
   @MinLength(5)
-  @MaxLength(255)
+  @MaxLength(1000)
   description: string;
 
   @IsNotEmpty()

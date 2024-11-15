@@ -44,7 +44,7 @@ model Event {
   id        String   @id @default(uuid()) @db.VarChar(36)
   title          String   @db.VarChar(255)
   image          String 
-  description    String    @db.VarChar(255)
+  description    String    @db.Text()
   categoryId     String  @db.VarChar(36)
   startDate      DateTime @db.DateTime
   endDate        DateTime @db.DateTime
