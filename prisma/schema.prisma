@@ -22,7 +22,7 @@ model User {
   roleId          String? @db.VarChar(36)
   agendaId          String? @db.VarChar(36)
   isActive        Boolean  @default(false)
-  activationToken String?
+  activationToken String? 
   gdpr            DateTime  @default(now())
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
@@ -33,7 +33,7 @@ model User {
 
 model Role {
   id        String   @id @default(uuid()) @db.VarChar(36)
-  name      String   @unique @db.VarChar(20)
+  name      String   @unique @db.VarChar(5)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -41,18 +41,19 @@ model Role {
 }
 
 model Event {
-  id        String   @id @default(uuid()) @db.VarChar(36)
-  title          String   @db.VarChar(255)
-  image          String 
-  description    String    @db.Text()
-  categoryId     String  @db.VarChar(36)
-  startDate      DateTime @db.DateTime
-  endDate        DateTime @db.DateTime
-  maxParticipants Int 
-  price          Float
-  isAvailable    Boolean  @default(true)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id              String   @id @default(uuid()) @db.VarChar(36)
+  title           String   @db.VarChar(255)
+  image           String   @db.Text()
+  description     String   @db.Text()
+  categoryId      String   @db.VarChar(36)
+  startDate       DateTime @db.DateTime
+  endDate         DateTime @db.DateTime
+  quantity        Int      @db.Int
+  maxParticipants Int      @db.Int
+  price           Float    @db.Float
+  isAvailable     Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
   category       Category @relation(fields: [categoryId], references: [id])
   agendas        Agenda_Has_Event[]
@@ -61,7 +62,7 @@ model Event {
 model Category {
   id           String   @id @default(uuid()) @db.VarChar(36)
   name         String   @unique @db.VarChar(36)
-  image        String
+  image        String   @db.Text()
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
@@ -69,10 +70,10 @@ model Category {
 }
 
 model Agenda {
-  id    String   @id @default(uuid()) @db.VarChar(36)
-  userId  String @default(uuid()) @db.VarChar(36)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id          String    @id @default(uuid()) @db.VarChar(36)
+  userId      String    @default(uuid()) @db.VarChar(36)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
   users         User[]
   agendaEvents  Agenda_Has_Event[]
@@ -81,7 +82,7 @@ model Agenda {
 model Agenda_Has_Event {
   agendaId   String   @db.VarChar(36)
   eventId    String   @db.VarChar(36)
-  quantity    Int
+  quantity    Int     @db.Int
 
   agenda     Agenda  @relation(fields: [agendaId], references: [id])
   event      Event   @relation(fields: [eventId], references: [id])
