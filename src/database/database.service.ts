@@ -24,7 +24,8 @@ export class DatabaseService {
 
   // Une fonction query pour nos requêtes
   async query(query: string, params?: any[]) {
-    const [results] = await this.connection.execute(query, params);
+    const [results] = await this.connection
+      .execute(query, params);
     return results;
   }
 

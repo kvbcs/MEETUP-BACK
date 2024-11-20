@@ -45,7 +45,8 @@ export class EventController {
 
   @UseGuards(JwtGuard, AdminGuard)
   @Patch('/update/:id')
-  updateEvent(@Body() dto: UpdateEventDto, @Param('id') id: string) {
+  updateEvent(@Body() dto: UpdateEventDto,
+    @Param('id') id: string) {
     return this.eventService.updateEvent(id, dto);
   }
 
