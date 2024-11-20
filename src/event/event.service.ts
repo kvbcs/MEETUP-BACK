@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ForbiddenException,
   Injectable,
   NotFoundException,
@@ -134,6 +135,16 @@ export class EventService {
         ...dto,
       },
     });
+
+    if (newEvent.startDate.getTime() > newEvent.endDate.getTime()) {
+      throw new BadRequestException('Start date cannot be after End date !');
+    }
+
+    if (newEvent.startDate.getTime() == newEvent.endDate.getTime()) {
+      throw new BadRequestException(
+        'Start date and End date cannot be the same !',
+      );
+    }
     return {
       message: 'Event created !',
       newEvent: newEvent,
