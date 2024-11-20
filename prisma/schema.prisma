@@ -48,7 +48,7 @@ model Event {
   categoryId      String   @db.VarChar(36)
   startDate       DateTime @db.DateTime
   endDate         DateTime @db.DateTime
-  quantity        Int      @db.Int
+  quantity        Int      @db.Int @default(0)
   maxParticipants Int      @db.Int
   price           Float    @db.Float
   isAvailable     Boolean  @default(true)

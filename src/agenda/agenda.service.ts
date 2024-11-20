@@ -41,7 +41,6 @@ export class AgendaService {
   }
 
   async addAgendaEvent(dto: InsertAgendaDto, id: string) {
-    // Vérifier s'il existe déjà une entrée avec la même combinaison de agendaId et eventId
     const existingAgendaEvent = await this.prisma.agenda_Has_Event.findUnique({
       where: {
         agendaId_eventId: {
