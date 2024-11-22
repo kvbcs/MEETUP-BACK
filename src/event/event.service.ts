@@ -1,6 +1,5 @@
 import {
   BadRequestException,
-  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -20,9 +19,14 @@ export class EventService {
         id: true,
         title: true,
         categoryId: true,
-        category: true,
+        category: {
+          select: {
+            name: true,
+          },
+        },
         image: true,
         description: true,
+        quantity: true,
         maxParticipants: true,
         price: true,
         startDate: true,
@@ -47,9 +51,14 @@ export class EventService {
         id: true,
         title: true,
         categoryId: true,
-        category: true,
+        category: {
+          select: {
+            name: true,
+          },
+        },
         image: true,
         description: true,
+        quantity: true,
         maxParticipants: true,
         price: true,
         startDate: true,
@@ -80,7 +89,11 @@ export class EventService {
         id: true,
         title: true,
         categoryId: true,
-        category: true,
+        category: {
+          select: {
+            name: true,
+          },
+        },
         image: true,
         description: true,
         maxParticipants: true,

@@ -20,9 +20,9 @@ model User {
   email           String  @unique() @db.VarChar(255)
   password        String  @db.VarChar(150)
   roleId          String? @db.VarChar(36)
-  agendaId          String? @db.VarChar(36)
+  agendaId        String? @db.VarChar(36)
   isActive        Boolean  @default(false)
-  activationToken String? 
+  activationToken String?  @db.VarChar(255)
   gdpr            DateTime  @default(now())
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
