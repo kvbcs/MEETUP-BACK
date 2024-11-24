@@ -9,7 +9,7 @@ export class UserService {
 
   async getAllUsers() {
     const query =
-      'SELECT id, firstName, lastName, email, password, roleId, isActive, createdAt, updatedAt FROM user ORDER BY createdAt';
+      'SELECT id, firstName, lastName, email, roleId, isActive, createdAt, updatedAt FROM user ORDER BY createdAt';
     const fetchUsers = await this.databaseService.query(query);
     return {
       users: fetchUsers,
@@ -17,7 +17,8 @@ export class UserService {
   }
 
   async getOneUser(id: string) {
-    const query = 'SELECT * FROM user WHERE id = ?';
+    const query =
+      'SELECT id, firstName, lastName, email, roleId, isActive, createdAt, updatedAt FROM user WHERE id = ?';
     const user = await this.databaseService.query(query, [id]);
     if (!user) {
       throw new ForbiddenException("User doesn't exist");
