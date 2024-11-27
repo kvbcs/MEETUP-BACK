@@ -7,5 +7,4 @@
 */
 -- AlterTable
 ALTER TABLE `event` MODIFY `startDate` DATETIME NOT NULL,
-    MODIFY `endDate` DATETIME NOT NULL,
-    MODIFY `quantity` INTEGER NOT NULL DEFAULT 0;
+    MODIFY `endDate` DATETIME NOT NULL;

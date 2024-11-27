@@ -5,10 +5,10 @@ CREATE TABLE `User` (
     `lastName` VARCHAR(255) NOT NULL,
     `email` VARCHAR(255) NOT NULL,
     `password` VARCHAR(150) NOT NULL,
-    `agendaId` VARCHAR(36) NOT NULL,
-    `roleId` VARCHAR(36) NOT NULL,
+    `roleId` VARCHAR(36) NULL,
+    `agendaId` VARCHAR(36) NULL,
     `isActive` BOOLEAN NOT NULL DEFAULT false,
-    `activationToken` VARCHAR(191) NOT NULL,
+    `activationToken` VARCHAR(255) NULL,
     `gdpr` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
@@ -20,7 +20,7 @@ CREATE TABLE `User` (
 -- CreateTable
 CREATE TABLE `Role` (
     `id` VARCHAR(36) NOT NULL,
-    `name` VARCHAR(20) NOT NULL,
+    `name` VARCHAR(5) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
@@ -32,13 +32,14 @@ CREATE TABLE `Role` (
 CREATE TABLE `Event` (
     `id` VARCHAR(36) NOT NULL,
     `title` VARCHAR(255) NOT NULL,
-    `image` VARCHAR(191) NOT NULL,
-    `description` VARCHAR(255) NOT NULL,
+    `image` TEXT NOT NULL,
+    `description` TEXT NOT NULL,
     `categoryId` VARCHAR(36) NOT NULL,
-    `startDate` DATETIME(3) NOT NULL,
-    `endDate` DATETIME(3) NOT NULL,
+    `startDate` DATETIME NOT NULL,
+    `endDate` DATETIME NOT NULL,
+    `quantity` INTEGER NOT NULL DEFAULT 0,
     `maxParticipants` INTEGER NOT NULL,
-    `price` DOUBLE NOT NULL,
+    `price` FLOAT NOT NULL,
     `isAvailable` BOOLEAN NOT NULL DEFAULT true,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
@@ -50,7 +51,7 @@ CREATE TABLE `Event` (
 CREATE TABLE `Category` (
     `id` VARCHAR(36) NOT NULL,
     `name` VARCHAR(36) NOT NULL,
-    `image` VARCHAR(191) NOT NULL,
+    `image` TEXT NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
@@ -78,13 +79,13 @@ CREATE TABLE `Agenda_Has_Event` (
 ) ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- AddForeignKey
-ALTER TABLE `User` ADD CONSTRAINT `User_roleId_fkey` FOREIGN KEY (`roleId`) REFERENCES `Role`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `User` ADD CONSTRAINT `User_agendaId_fkey` FOREIGN KEY (`agendaId`) REFERENCES `Agenda`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `User` ADD CONSTRAINT `User_roleId_fkey` FOREIGN KEY (`roleId`) REFERENCES `Role`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Event` ADD CONSTRAINT `Event_categoryId_fkey` FOREIGN KEY (`categoryId`) REFERENCES `Category`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `Agenda` ADD CONSTRAINT `Agenda_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Agenda_Has_Event` ADD CONSTRAINT `Agenda_Has_Event_agendaId_fkey` FOREIGN KEY (`agendaId`) REFERENCES `Agenda`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
