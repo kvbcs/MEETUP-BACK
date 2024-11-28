@@ -44,7 +44,6 @@ export class EventService {
   }
 
   async getOneEvent(id: string) {
-    // Recherche de l'événement et sélection des champs spécifiques en une seule requête
     const fetchEvent = await this.prisma.event.findUnique({
       where: { id: id },
       select: {
@@ -69,12 +68,10 @@ export class EventService {
       },
     });
 
-    // Si l'événement n'existe pas, lève une exception
     if (!fetchEvent) {
       throw new NotFoundException('Event not found!');
     }
 
-    // Retourne l'événement trouvé
     return fetchEvent;
   }
 
@@ -160,7 +157,6 @@ export class EventService {
     }
     return {
       message: 'Event created !',
-      newEvent: newEvent,
     };
   }
 
@@ -173,7 +169,7 @@ export class EventService {
       throw new NotFoundException('Unexisting id !');
     }
 
-    const updatedEvent = await this.prisma.event.update({
+    await this.prisma.event.update({
       where: { id: id },
       data: {
         ...dto,
@@ -182,7 +178,6 @@ export class EventService {
 
     return {
       message: 'Event updated !',
-      updatedEvent: updatedEvent,
     };
   }
 
@@ -195,13 +190,12 @@ export class EventService {
       throw new NotFoundException('Unexisting id !');
     }
 
-    const deletedEvent = await this.prisma.event.delete({
+   await this.prisma.event.delete({
       where: { id: id },
     });
 
     return {
       message: 'Event deleted !',
-      deletedEvent: deletedEvent,
     };
   }
 }
