@@ -46,16 +46,15 @@ export class AuthService {
 
     await this.prisma.user.update({
       where: { id: user.id },
-      data: { agendaId: NewAgenda.id }, // Mettre à jour agendaId
+      data: { agendaId: NewAgenda.id }, 
     });
 
-    // Envoyer l'email de confirmation
     await this.emailService.sendUserConfirmation(user, activationToken);
 
     return {
       message: 'Sign up successful!',
-      user: { ...user, agendaId: NewAgenda.id }, // Inclure agendaId dans la réponse
-      agenda: NewAgenda, // Retourne l'agenda nouvellement créé
+      user: { ...user, agendaId: NewAgenda.id }, 
+      agenda: NewAgenda, 
     };
   }
 
@@ -98,7 +97,7 @@ export class AuthService {
 
     const secret = this.config.get('JWT_SECRET');
     const token = await this.jwt.signAsync(payload, {
-      expiresIn: '30d',
+      expiresIn: '15m',
       secret: secret,
     });
 

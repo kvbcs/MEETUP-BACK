@@ -1,5 +1,4 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
 import { UpdateUserDto } from './dto';
 import { DatabaseService } from 'src/database/database.service';
 
@@ -28,8 +27,6 @@ export class UserService {
 
   async updateUser(id: string, dto: UpdateUserDto) {
     const existingUserQuery = 'SELECT id FROM user WHERE id = ?';
-
-    // Vérifier si l'utilisateur existe
     const existingUser = await this.databaseService.query(existingUserQuery, [
       id,
     ]);
@@ -37,7 +34,6 @@ export class UserService {
       throw new ForbiddenException("User doesn't exist");
     }
 
-    // Préparer la mise à jour
     const fieldsToUpdate = [];
     const values = [];
 
@@ -58,31 +54,23 @@ export class UserService {
       values.push(dto.password);
     }
 
-    // Vérifier s'il y a des champs à mettre à jour
     if (fieldsToUpdate.length === 0) {
       throw new ForbiddenException('No fields to update');
     }
 
     const updateUserQuery = `UPDATE user SET ${fieldsToUpdate.join(', ')} WHERE id = ?`;
-    values.push(id); // Ajouter l'ID à la fin des valeurs
+    values.push(id);
 
-    // Mettre à jour l'utilisateur
     await this.databaseService.query(updateUserQuery, values);
 
     return {
       message: 'User updated!',
-      updatedUser: { id, ...dto }, // Inclure les nouvelles données dans la réponse
+      updatedUser: { id, ...dto },
     };
   }
 
   async deleteUser(id: string) {
     const existingUserQuery = 'SELECT id FROM user WHERE id = ?';
-    const deleteAgendaEventsQuery =
-      'DELETE FROM agenda_has_event WHERE agendaId IN (SELECT id FROM agenda WHERE userId = ?)';
-    const deleteAgendaQuery = 'DELETE FROM agenda WHERE userId = ?';
-    const deleteUserQuery = 'DELETE FROM user WHERE id = ?';
-
-    // Vérifier si l'utilisateur existe
     const existingUser = await this.databaseService.query(existingUserQuery, [
       id,
     ]);
@@ -90,25 +78,18 @@ export class UserService {
       throw new ForbiddenException("User doesn't exist");
     }
 
-    // Supprimer les produits dans le panier
-    const deletedAgendaEvents = await this.databaseService.query(
-      deleteAgendaEventsQuery,
-      [id],
-    );
+    const deleteAgendaEventsQuery =
+      'DELETE FROM agenda_has_event WHERE agendaId IN (SELECT id FROM agenda WHERE userId = ?)';
+    await this.databaseService.query(deleteAgendaEventsQuery, [id]);
 
-    // Supprimer le panier
-    const deletedAgenda = await this.databaseService.query(deleteAgendaQuery, [
-      id,
-    ]);
+    const deleteAgendaQuery = 'DELETE FROM agenda WHERE userId = ?';
+    await this.databaseService.query(deleteAgendaQuery, [id]);
 
-    // Supprimer l'utilisateur
-    const deletedUser = await this.databaseService.query(deleteUserQuery, [id]);
+    const deleteUserQuery = 'DELETE FROM user WHERE id = ?';
+    await this.databaseService.query(deleteUserQuery, [id]);
 
     return {
       message: 'User deleted!',
-      deletedUser: deletedUser,
-      deletedAgendaEvents: deletedAgendaEvents,
-      deletedAgenda: deletedAgenda,
     };
   }
 }
