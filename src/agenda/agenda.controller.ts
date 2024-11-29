@@ -13,12 +13,14 @@ import {
 import { JwtGuard } from 'src/auth/guards';
 import { AgendaService } from './agenda.service';
 import { InsertAgendaDto, UpdateAgendaDto } from './dto';
+import { AdminGuard } from 'src/auth/guards/admin.guard';
 
 @UseGuards(JwtGuard)
 @Controller('agenda')
 export class AgendaController {
   constructor(private readonly agendaService: AgendaService) {}
 
+  @UseGuards(AdminGuard)
   @Get('/all')
   getAllAgendas() {
     return this.agendaService.getAllAgendas();

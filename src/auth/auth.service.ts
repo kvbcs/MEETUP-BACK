@@ -33,7 +33,7 @@ export class AuthService {
         lastName: dto.lastName,
         email: dto.email,
         password: hash,
-        roleId: 'c4508381-545b-42a8-90b2-8ce7d6fc4724',
+        roleId: `${process.env.USER_ROLE}`,
         isActive: false,
         activationToken: activationToken,
       },
@@ -97,7 +97,7 @@ export class AuthService {
 
     const secret = this.config.get('JWT_SECRET');
     const token = await this.jwt.signAsync(payload, {
-      expiresIn: '15m',
+      expiresIn: '1d',
       secret: secret,
     });
 

@@ -34,12 +34,11 @@ export class CategoryService {
     if (existingCategory) {
       throw new ForbiddenException('Category already exists');
     }
-    const newCategory = await this.prisma.category.create({
+    await this.prisma.category.create({
       data: { ...dto },
     });
     return {
       message: 'Category created !',
-      newCategory: newCategory,
     };
   }
 
@@ -52,14 +51,13 @@ export class CategoryService {
       throw new ForbiddenException('Unexisting id');
     }
 
-    const updatedCategory = await this.prisma.category.update({
+    await this.prisma.category.update({
       where: { id: id },
       data: { ...dto },
     });
 
     return {
       message: 'Category updated !',
-      updatedCategory: updatedCategory,
     };
   }
 
@@ -72,14 +70,13 @@ export class CategoryService {
       throw new ForbiddenException('Unexisting id');
     }
 
-    const deletedCategory = await this.prisma.category.delete({
+    await this.prisma.category.delete({
       where: { id: id },
       select: { id: true, name: true, image: true },
     });
 
     return {
       message: 'Category deleted !',
-      deletedCategory: deletedCategory,
     };
   }
 }
